@@ -15,24 +15,24 @@ def get_letter_distribution(words: list) -> dict:
 
 
 def find_best_guess(words: list) -> str:
-    possible_solutions = words.copy()
     letters = get_letter_distribution(words)
+    words_copy = words.copy()
 
     for letter in letters:
-        for word in words:
-            if letter not in word and len(possible_solutions) > 1:
-                possible_solutions.remove(word)
-            else:
-                return possible_solutions[0]
+        solutions = [word for word in words_copy if letter in word]
+        if len(solutions) == 1:
+            return solutions[0]
+        elif len(solutions) > 1:
+            words_copy = solutions
 
 
 def find_possible_solutions(words: list, guess: str, greens: dict, yellows: dict, limits: dict) -> list:
     solutions = []
-    includedLetters = list(greens.values()) + list(yellows.values())
+    included_letters = list(greens.values()) + list(yellows.values())
 
     for word in words:
         if (len(word) == len(guess) and
-            not any(letter not in word for letter in includedLetters) and
+            not any(letter not in word for letter in included_letters) and
             not any(word.count(letter) > limit for letter, limit in limits.items()) and
             not any(word[i] != guess[i] for i in greens) and
             not any(word[i] == guess[i] for i in yellows)):
@@ -71,8 +71,8 @@ def main():
         solutions = find_possible_solutions(words, guess, greens, yellows, limits)
         execution_time = round((perf_counter() - time)*1000, 2)
 
-        print(f"Found {len(solutions)} solution{'s' if len(solutions) > 1 else ''} in {execution_time} ms")
-        print(f"Possible solution{'s' if len(solutions) > 1 else ''}: {', '.join(solutions)}")
+        print(f"Found {len(solutions)} solution{'s' if len(solutions) != 1 else ''} in {execution_time} ms")
+        print(f"Possible solution{'s' if len(solutions) != 1 else ''}: {', '.join(solutions)}")
 
         if len(solutions) > 1:
             print(f"Best guess: {find_best_guess(solutions)}")
