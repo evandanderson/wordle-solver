@@ -65,9 +65,9 @@ def main():
             for index in input("Greens: ").split()}
         yellows = {int(index) - 1: guess[int(index) - 1]
             for index in input("Yellows: ").split()}
-        greys = {int(index) - 1: letter for index, letter in enumerate(
+        greys = {int(index): letter for index, letter in enumerate(
             guess) if index not in greens and index not in yellows}
-        limits = get_limits(greens, yellows, greys)
+        limits = limits | get_limits(greens, yellows, greys)
 
         time = perf_counter()
         solutions = find_possible_solutions(words, guess, greens, yellows, limits)
