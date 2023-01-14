@@ -25,6 +25,8 @@ def find_best_guess(words: list) -> str:
         elif len(solutions) > 1:
             words_copy = solutions
 
+    return " or ".join(words_copy)
+
 
 def find_possible_solutions(words: list, guess: str, greens: dict, yellows: dict, limits: dict) -> list:
     solutions = []
